@@ -2,7 +2,7 @@ const errors = require('./errors');
 const games = new Map();
 
 
-const createGame = ({player1,roomId,heaps})=>{
+const createGame = (roomId,heaps,player1)=>{
     games.set(roomId,{
         id: roomId,
         heaps,
@@ -16,7 +16,7 @@ const createGame = ({player1,roomId,heaps})=>{
     return {game : games.get(roomId)}
 }
 
-const joinGame = ({player2,roomId})=>{
+const joinGame = (roomId,player2)=>{
     if(games.has(roomId)){
         const game = games.get(roomId)
         // this will change if spectators are added

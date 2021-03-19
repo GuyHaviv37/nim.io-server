@@ -38,7 +38,7 @@ io.on('connect',client =>{
 
     // Establishing a room
     client.on('newGame',({roomId,heaps},callback)=>{
-        const {error , game} = createGame({player1: client.id, roomId , heaps});
+        const {error , game} = createGame(roomId,heaps,client.id);
         if(error) return callback(error);
 
         const updatedUser = updateUser(client.id,{room: game.id, role: PLAYER_1})
@@ -53,7 +53,7 @@ io.on('connect',client =>{
     });
 
     client.on('joinGame',({roomId},callback)=>{
-        const {error, game} = joinGame({player2: client.id,roomId})
+        const {error, game} = joinGame(roomId, client.id);
         if(error) return callback(error)
 
         const updatedUser = updateUser(client.id,{room: game.id, role : PLAYER_2});
