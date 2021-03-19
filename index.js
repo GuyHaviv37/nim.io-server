@@ -21,12 +21,12 @@ const io = socketio(server,{
 
 app.use(router);
 
-// move to constants
+// TODO: move to constants
 const PLAYER_1 = 1
 const PLAYER_2 = 2
 const SPECTATOR = 3
 
-// move to utils
+// TODO: move to utils
 const checkGameOver = (heaps)=>{
     const sum = heaps.reduce((acc,curr) => acc+curr,0);
     return sum <= 0;
@@ -62,6 +62,7 @@ io.on('connect',client =>{
         client.join(game.id);
         // broadcast to all clients in the room that game is init'ed for display.
         io.in(game.id).emit('init',{newGame : game});
+
         client.emit('roleUpdate',{userRole : updatedUser.user.role})
 
         console.log(getAllUsers());
@@ -73,10 +74,9 @@ io.on('connect',client =>{
         const currentGame = getGame(userRoom).game;
         // handle error check if game was not found !!
 
-
         const {heaps} = currentGame;
 
-        // Validity checks
+        // Validity checks - TODO:  move to utils
         if(heapIndex < 0 || heapIndex > 2){
             // throw error - this should never happen if front-end is used
             return callback({
@@ -116,7 +116,7 @@ io.on('connect',client =>{
             const userToUpdate = updatedGame.player1;
             const {error} = updateUser(userToUpdate,{role : PLAYER_1});
             if(error) console.error(error.msg); // there shouldnt be any errors
-            else io.to(userToUpdate).emit('roleUpdate',{userRole : PLAYER_1});
+            else io.to(userToUpdate).emit('roleUpdate',{userRole : getUser(userToUpdate).user.role});
         }
         // send game update to the room
         io.to(userRoom).emit('gameUpdate',{update: updatedGame});
