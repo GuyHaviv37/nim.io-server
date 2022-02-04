@@ -83,7 +83,7 @@ io.on('connect',client =>{
                 msg : `Error on heap index : ${heapIndex}`
             })
         }
-        if(amount > heaps[heapIndex]){
+        if(amount > heaps[heapIndex] || amount <= 0){
             // throw error - this should never happen if front-end is used
             return callback({
                 msg : `Cannot remove ${amount} of items from heap ${heapIndex}`
