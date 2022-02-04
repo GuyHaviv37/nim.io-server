@@ -4,6 +4,7 @@ const router = require('./router');
 const socketio = require('socket.io');
 const {createGame,joinGame,getGame,updateGame,removeGame, getAllGames, removePlayerFromGame} = require('./games');
 const {addUser,getUser,updateUser, removeUser,getUserRoom,getAllUsers} = require('./users');
+const {PLAYER_1, PLAYER_2} = require('./constants');
 const errors = require('./errors');
 
 const PORT = process.env.PORT || 8080
@@ -20,11 +21,6 @@ const io = socketio(server,{
 
 
 app.use(router);
-
-// TODO: move to constants
-const PLAYER_1 = 1
-const PLAYER_2 = 2
-const SPECTATOR = 3
 
 // TODO: move to utils
 const checkGameOver = (heaps)=>{
@@ -66,6 +62,8 @@ io.on('connect',client =>{
         client.emit('roleUpdate',{userRole : updatedUser.user.role})
 
         console.log(getAllUsers());
+        console.log(getAllGames());
+
         callback();
     });
 
@@ -73,8 +71,14 @@ io.on('connect',client =>{
         const userRoom = getUserRoom(client.id);
         const currentGame = getGame(userRoom).game;
         // handle error check if game was not found !!
+        if (currentGame.currentPlayerTurn !== client.id) {
+            console.log(`This is not ${client.id}'s turn`);
+            return callback({
+                msg: `This is not your turn`
+            });
+        }
 
-        const {heaps} = currentGame;
+        const {heaps, player1, player2} = currentGame;
 
         // Validity checks - TODO:  move to utils
         if(heapIndex < 0 || heapIndex > 2){
@@ -90,6 +94,7 @@ io.on('connect',client =>{
             })
         }
         heaps[heapIndex] -= amount;
+        currentGame.currentPlayerTurn = currentGame.currentPlayerTurn === player1 ? player2 : player1; 
         if(checkGameOver(heaps)){
             io.to(userRoom).emit('gameOver',{winner : client.id});
         } else {

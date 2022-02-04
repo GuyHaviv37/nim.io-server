@@ -1,4 +1,5 @@
 const errors = require('./errors');
+const {PLAYER_1, PLAYER_2} = require('./constants');
 const games = new Map();
 
 
@@ -10,7 +11,8 @@ const createGame = (roomId,heaps,player1)=>{
         player1,
         player2: null,
         spectators: [],
-        playersConnected : 1
+        playersConnected : 1,
+        currentPlayerTurn: player1,
     });
 
     return {game : games.get(roomId)}
