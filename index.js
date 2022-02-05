@@ -67,10 +67,37 @@ io.on('connect',client =>{
         callback();
     });
 
+    client.on('toggleReady', ({isReady}, callback)=> {
+        const userRoom = getUserRoom(client.id);
+        const currentGame = getGame(userRoom).game;
+        const {player1, player2} = currentGame;
+        if (client.id === player1) {
+            currentGame.isPlayer1Ready = isReady;
+        } else if (client.id === player2) {
+            currentGame.isPlayer2Ready = isReady;
+        } else {
+            console.log(`Player with id: ${client.id} is not specifed in this game - cannot change ready status`);
+        }
+        
+        // Update the room that playerX is ready
+        io.to(userRoom).emit('gameUpdate',{update: getGame(userRoom).game})
+
+        console.log(getAllGames());
+        callback();
+    });
+
     client.on('gameMove',({heapIndex,amount},callback)=>{
         const userRoom = getUserRoom(client.id);
         const currentGame = getGame(userRoom).game;
         // handle error check if game was not found !!
+
+        // Check both players are ready
+        if (!currentGame.isPlayer1Ready || !currentGame.isPlayer2Ready) {
+            return callback({
+                msg: 'At least one player is not ready yet...'
+            })
+        }
+        // Check turn legality
         if (currentGame.currentPlayerTurn !== client.id) {
             console.log(`This is not ${client.id}'s turn`);
             return callback({
@@ -93,8 +120,10 @@ io.on('connect',client =>{
                 msg : `Cannot remove ${amount} of items from heap ${heapIndex}`
             })
         }
+        // Update legal game move
         heaps[heapIndex] -= amount;
-        currentGame.currentPlayerTurn = currentGame.currentPlayerTurn === player1 ? player2 : player1; 
+        currentGame.currentPlayerTurn = currentGame.currentPlayerTurn === player1 ? player2 : player1;
+
         if(checkGameOver(heaps)){
             io.to(userRoom).emit('gameOver',{winner : client.id});
         } else {

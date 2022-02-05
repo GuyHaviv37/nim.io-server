@@ -13,6 +13,8 @@ const createGame = (roomId,heaps,player1)=>{
         spectators: [],
         playersConnected : 1,
         currentPlayerTurn: player1,
+        isPlayer1Ready: false,
+        isPlayer2Ready: false,
     });
 
     return {game : games.get(roomId)}
