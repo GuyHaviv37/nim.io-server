@@ -4,6 +4,7 @@ const games = new Map();
 
 
 const createGame = (roomId,heaps,player1)=>{
+    if (heaps.some((heapSize) => heapSize > 25 || heapSize <= 0)) return {error: {msg: 'Heap size must be between 1 and 25'}};
     games.set(roomId,{
         id: roomId,
         heaps,
