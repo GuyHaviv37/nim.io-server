@@ -71,13 +71,20 @@ const removePlayerFromGame = (roomId,userId)=>{
                 switchedRoles = true;
             }
             game.player2 = null;
+            //@TODO: reuse between two cases
             game.playersConnected--;
             game.heaps = [...game.originalHeaps];
+            game.currentPlayerTurn = game.player1;
+            game.isPlayer1Ready = false;
+            game.isPlayer2Ready = false;
             return {switchedRoles, updatedGame : game}
         }else if(game.playersConnected == 1){
             game.player1 = null;
             game.playersConnected--;
             game.heaps = [...game.originalHeaps];
+            game.currentPlayerTurn = game.player1;
+            game.isPlayer1Ready = false;
+            game.isPlayer2Ready = false;
             return {switchedRoles, updatedGame : game}
         } else{
             return {error: {
@@ -108,6 +115,7 @@ const removeGame = (roomId)=>{
 const resetGame = (roomId) => {
     if(games.has(roomId)) {
         const game = games.get(roomId);
+        //@TODO: reuse with removePlayerFromGame
         game.heaps = [...game.originalHeaps];
         game.currentPlayerTurn = game.player1;
         game.isPlayer1Ready = false;
