@@ -105,10 +105,28 @@ const removeGame = (roomId)=>{
     }
 }
 
+const resetGame = (roomId) => {
+    if(games.has(roomId)) {
+        const game = games.get(roomId);
+        game.heaps = [...game.originalHeaps];
+        game.currentPlayerTurn = game.player1;
+        game.isPlayer1Ready = false;
+        game.isPlayer2Ready = false;
+        return {updatedGame: game}
+    } else {
+        return {
+            error: {
+                msg: `Error in resetGame: no such game with id ${roomId}`,
+                type : errors.NO_ROOM_ID
+            }
+        }
+    }
+}
+
 const getAllGames = ()=>{
     return games;
 }
 
 module.exports = {
-    createGame,joinGame,getGame,updateGame,removeGame,removePlayerFromGame,getAllGames,
+    createGame,joinGame,getGame,updateGame,removeGame,removePlayerFromGame,getAllGames,resetGame
 }

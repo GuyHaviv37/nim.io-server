@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const router = require('./router');
 const socketio = require('socket.io');
-const {createGame,joinGame,getGame,updateGame,removeGame, getAllGames, removePlayerFromGame} = require('./games');
+const {createGame,joinGame,getGame, resetGame ,removeGame, getAllGames, removePlayerFromGame} = require('./games');
 const {addUser,getUser,updateUser, removeUser,getUserRoom,getAllUsers} = require('./users');
 const {PLAYER_1, PLAYER_2} = require('./constants');
 const errors = require('./errors');
@@ -132,6 +132,13 @@ io.on('connect',client =>{
 
         callback();
     })
+
+    client.on('restartGame', ({roomId}, callback) => {
+        const {updatedGame, error} = resetGame(roomId);
+        if (error) return callback(error);
+        
+        io.in(updatedGame.id).emit('gameUpdate',{update : updatedGame, isRestart: true});
+    });
 
     const disconnectHandler = ()=>{
         // can add error checking on getUserRoom
