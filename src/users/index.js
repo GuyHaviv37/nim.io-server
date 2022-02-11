@@ -1,4 +1,4 @@
-const errors = require('./errors');
+const errors = require('../errors');
 const users = new Map();
 
 const addUser = (socketId)=>{

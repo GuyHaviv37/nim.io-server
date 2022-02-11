@@ -1,5 +1,4 @@
-const errors = require('./errors');
-const {PLAYER_1, PLAYER_2} = require('./constants');
+const errors = require('../errors');
 const games = new Map();
 
 
