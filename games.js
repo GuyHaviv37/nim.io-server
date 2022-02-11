@@ -25,7 +25,10 @@ const joinGame = (roomId,player2)=>{
     if(games.has(roomId)){
         const game = games.get(roomId)
         // this will change if spectators are added
-        if(game.playersConnected != 1) return {error : `Wrong number of players connected to the game, cannot join`};
+        if(game.playersConnected != 1) return {error : {
+            msg: `Wrong number of players connected to the game, cannot join`,
+            type: errors.FULL_ROOM, 
+        }};
         game.player2 = player2;
         game.playersConnected++;
         //console.log(game);
