@@ -3,7 +3,6 @@ const express = require('express');
 const router = require('./src/router');
 const socketio = require('socket.io');
 const { addUser } = require('./src/users');
-
 const {
     newGameHandler,
     joinGameHandler,
