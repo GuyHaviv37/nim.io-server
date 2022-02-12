@@ -21,7 +21,9 @@ const getUser = (socketId)=>{
 
 const getUserRoom = (socketId)=>{
     if(users.has(socketId)){
-        return users.get(socketId).room;
+        const userRoom = users.get(socketId).room;
+        if (!userRoom) return { error: {msg: `User ${socketId} is currently not in any room`}};
+        return userRoom;
     } else {
         return { error : {
             msg : `Error in getUserRoom : No such user with id ${socketId}`,
@@ -31,7 +33,7 @@ const getUserRoom = (socketId)=>{
     }
 }
 
-const updateUser = (socketId,update)=>{
+const updateUser = (socketId, update)=>{
     if(users.has(socketId)){
         users.set(socketId,{...users.get(socketId),...update});
         return {user: users.get(socketId)};

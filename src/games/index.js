@@ -131,6 +131,7 @@ const removeGame = (roomId) => {
 
 const resetGame = (roomId) => {
     if(games.has(roomId)) {
+        const game = games.get(roomId);
         const resettedGame = resetGameState(game);
         return {updatedGame: resettedGame}
     } else {

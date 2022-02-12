@@ -4,9 +4,8 @@ const errors = require('../errors');
 const {PLAYER_1} = require('../constants');
 
 const disconnectHandler = (io, client) => () => {
-    // can add error checking on getUserRoom
     const userRoom = getUserRoom(client.id);
-    console.log('user Room: ', userRoom);
+    // can add error checking on getUserRoom
 
     // update game with the disconnected user removed
     const {error,switchedRoles , updatedGame} = removePlayerFromGame(userRoom,client.id);
