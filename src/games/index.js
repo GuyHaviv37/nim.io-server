@@ -1,4 +1,4 @@
-const errors = require('../errors');
+const errors = require('./errors');
 const {validateInitialHeapSizes, resetGameState} = require('./utils');
 const games = new Map();
 
@@ -17,7 +17,7 @@ const EMPTY_GAME = {
 
 const createGame = (roomId, heaps, player1)=>{
     if (!validateInitialHeapSizes(heaps)) {
-        return {error: {msg: 'Heap size must be between 1 and 25'}};
+        throw errors.InvalidHeapsSizesError();
     };
 
     games.set(roomId,{
@@ -30,7 +30,7 @@ const createGame = (roomId, heaps, player1)=>{
         playersConnected: 1,
     });
 
-    return {game : games.get(roomId)}
+    return games.get(roomId);
 }
 
 const joinGame = (roomId, player2)=>{
@@ -38,19 +38,13 @@ const joinGame = (roomId, player2)=>{
         const game = games.get(roomId)
         // this will change if spectators are added
         if(game.playersConnected != 1) {
-            return {error : {
-                msg: `Wrong number of players connected to the game, cannot join`,
-                type: errors.FULL_ROOM, 
-           }}
+            throw errors.FullRoomError(roomId);
         };
         game.player2 = player2;
         game.playersConnected++;
-        return {game};
+        return game;
     } else {
-        return {error: {
-            msg : `Tried to join room ${roomId}, but no such room exists`,
-            type : errors.NO_ROOM_ID
-        }}
+        throw errors.RoomNotFoundError(roomId);
     }
 }
 
@@ -58,46 +52,32 @@ const getGame = (roomId)=>{
     if(games.has(roomId)){
         return {game : games.get(roomId)}
     } else {
-        return {error: {
-            msg : `Error in getGame : No such game with id ${roomId}`,
-            type : errors.NO_ROOM_ID
-        }}
+        throw errors.RoomNotFoundError(roomId);
     }
 }
 
-const updateGame = (roomId, update)=>{
-    if (games.has(roomId)) {
-        const game = games.getGame(roomId);
-        games.set(roomId,{...game,...update});
-        return {game: games.get(roomId)};
-    } else {
-        return {error: {
-            msg : `Error in updateGame : No such game with id ${roomId}`,
-            type : errors.NO_ROOM_ID
-        }}
-    }
-}
+// const updateGame = (roomId, update)=>{
+//     if (games.has(roomId)) {
+//         const game = games.getGame(roomId);
+//         games.set(roomId,{...game,...update});
+//         return {game: games.get(roomId)};
+//     } else {
+//         throw errors.RoomNotFoundError(roomId);
+//     }
+// }
 
 const removePlayerFromGame = (roomId, userId)=>{
     if(games.has(roomId)){
         const game = games.get(roomId);
         let switchedRoles = false;
 
-        if (game.playersConnected > 2 || game.playersConnected < 1) {
-            return {
-                error: {
-                    msg: 'No players are connected to this game, should have been deleted',
-                    type : errors.NO_PLAYERS_FOUND
-                }
-            }
-        }
         if (userId !== game.player1 && userId !== game.player2) {
-            return {
-                error: {
-                    msg: `${userId} is not in game ${roomId}`
-                }
-            }
+            throw errors.UserNotFoundInRoom(userId, roomId);
         }
+        if (game.playersConnected < 1) {
+            throw errors.NotEnoughPlayersError();
+        }
+        // assumption maximum players in room are 2
         if(game.playersConnected == 2){
             if(userId == game.player1){
                 game.player1 = game.player2;
@@ -111,10 +91,7 @@ const removePlayerFromGame = (roomId, userId)=>{
         const resettedGame = resetGameState(game);
         return {switchedRoles, updatedGame : resettedGame}
     } else {
-        return {error : {
-            msg : `Error in removePlayerFromGame : No such game with id ${roomId}`,
-            type : errors.NO_ROOM_ID
-        }}
+        throw errors.RoomNotFoundError(roomId);
     }
 }
 
@@ -122,10 +99,7 @@ const removeGame = (roomId) => {
     if(games.has(roomId)){
         games.delete(roomId);
     } else {
-        return {error : {
-            msg : `Error in removeGame : No such game with id ${roomId}`,
-            type : errors.NO_ROOM_ID
-        }}
+        throw errors.RoomNotFoundError(roomId);
     }
 }
 
@@ -135,12 +109,7 @@ const resetGame = (roomId) => {
         const resettedGame = resetGameState(game);
         return {updatedGame: resettedGame}
     } else {
-        return {
-            error: {
-                msg: `Error in resetGame: no such game with id ${roomId}`,
-                type : errors.NO_ROOM_ID
-            }
-        }
+        throw errors.RoomNotFoundError(roomId);
     }
 }
 
@@ -149,5 +118,5 @@ const getAllGames = () => {
 }
 
 module.exports = {
-    createGame,joinGame,getGame,updateGame,removeGame,removePlayerFromGame,getAllGames,resetGame
+    createGame,joinGame,getGame,removeGame,removePlayerFromGame,getAllGames,resetGame
 }

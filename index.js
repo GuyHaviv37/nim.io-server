@@ -32,7 +32,7 @@ app.use(router);
 io.on('connect', client => {
     addUser(client.id);
 
-    client.on('newGame', newGameHandler(io, client));
+    client.on('newGame', newGameHandler(client));
     client.on('joinGame', joinGameHandler(io, client));
     client.on('toggleReady', toggleReadyHandler(io, client));
     client.on('gameMove', gameMoveHandler(io, client));
