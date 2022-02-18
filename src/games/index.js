@@ -50,21 +50,21 @@ const joinGame = (roomId, player2)=>{
 
 const getGame = (roomId)=>{
     if(games.has(roomId)){
-        return games.get(roomId);
+        return {...games.get(roomId)};
     } else {
         throw errors.RoomNotFoundError(roomId);
     }
 }
 
-// const updateGame = (roomId, update)=>{
-//     if (games.has(roomId)) {
-//         const game = games.getGame(roomId);
-//         games.set(roomId,{...game,...update});
-//         return {game: games.get(roomId)};
-//     } else {
-//         throw errors.RoomNotFoundError(roomId);
-//     }
-// }
+const updateGame = (roomId, update) => {
+    if (games.has(roomId)) {
+        const game = games.get(roomId);
+        games.set(roomId,{...game,...update});
+        return games.get(roomId);
+    } else {
+        throw errors.RoomNotFoundError(roomId);
+    }
+}
 
 const removePlayerFromGame = (roomId, userId)=>{
     if(games.has(roomId)){
@@ -118,5 +118,5 @@ const getAllGames = () => {
 }
 
 module.exports = {
-    createGame,joinGame,getGame,removeGame,removePlayerFromGame,getAllGames,resetGame
+    createGame,joinGame,getGame,removeGame,removePlayerFromGame,getAllGames,resetGame,updateGame
 }

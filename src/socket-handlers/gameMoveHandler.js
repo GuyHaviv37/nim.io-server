@@ -1,5 +1,5 @@
 const {getUserRoom} = require('../users');
-const {getGame} = require('../games');
+const {getGame, updateGame} = require('../games');
 const {arePlayersReady, isPlayersTurn, isHeapIndexValid, isAmountToRemoveValid, isGameOver} = require('./gameUtils');
 
 const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
@@ -31,9 +31,10 @@ const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
                 msg : `Cannot remove ${amount} of items from heap ${heapIndex}`
             })
         }
-        // Update legal game move - would be best to do it by copy and not by index I guess if we try to mock a db
+        
         heaps[heapIndex] -= amount;
-        currentGame.currentPlayerTurn = currentGame.currentPlayerTurn === player1 ? player2 : player1;
+        const currentPlayerTurn = currentGame.currentPlayerTurn === player1 ? player2 : player1;
+        updateGame(userRoom, {heaps, currentPlayerTurn});
     
         if(isGameOver(heaps)){
             io.to(userRoom).emit('gameOver',{winner : client.id});
