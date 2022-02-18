@@ -5,7 +5,7 @@ const {arePlayersReady, isPlayersTurn, isHeapIndexValid, isAmountToRemoveValid, 
 const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
     try {
         const userRoom = getUserRoom(client.id);
-        const currentGame = getGame(userRoom).game;
+        const currentGame = getGame(userRoom);
     
         if (!arePlayersReady(currentGame)) {
             return callback({
@@ -38,7 +38,7 @@ const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
         if(isGameOver(heaps)){
             io.to(userRoom).emit('gameOver',{winner : client.id});
         } else {
-            io.to(userRoom).emit('gameUpdate',{update: getGame(userRoom).game})
+            io.to(userRoom).emit('gameUpdate',{update: getGame(userRoom)})
         }
     
         callback();

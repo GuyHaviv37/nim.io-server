@@ -9,7 +9,7 @@ const newGameHandler = (client) => ({roomId,heaps},callback) => {
 
         client.join(game.id);
         client.emit('init',{newGame : game})
-        client.emit('roleUpdate',{userRole : updatedUser.user.role})
+        client.emit('roleUpdate',{userRole : updatedUser.role})
 
         callback();
     } catch (error) {

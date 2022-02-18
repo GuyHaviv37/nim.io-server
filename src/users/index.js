@@ -10,7 +10,7 @@ const addUser = (socketId) => {
 
 const getUser = (socketId) => {
     if (users.has(socketId)) {
-        return { user: users.get(socketId) }
+        return users.get(socketId);
     } else {
         throw errors.UserNotFoundError(userId);
     }
@@ -29,7 +29,7 @@ const getUserRoom = (socketId) => {
 const updateUser = (socketId, update) => {
     if (users.has(socketId)) {
         users.set(socketId, { ...users.get(socketId), ...update });
-        return { user: users.get(socketId) };
+        return users.get(socketId);
     } else {
         throw errors.UserNotFoundError(socketId);
     }

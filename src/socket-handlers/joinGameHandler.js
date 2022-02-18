@@ -11,7 +11,7 @@ const joinGameHandler = (io, client) => ({roomId},callback) => {
         // broadcast to all clients in the room that game is init'ed for display.
         io.in(game.id).emit('init',{newGame : game});
 
-        client.emit('roleUpdate',{userRole : updatedUser.user.role})
+        client.emit('roleUpdate',{userRole : updatedUser.role})
 
         callback();
     } catch (error) {

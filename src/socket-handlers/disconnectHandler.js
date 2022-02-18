@@ -13,7 +13,7 @@ const disconnectHandler = (io, client) => () => {
         if(switchedRoles){
             const userToUpdate = updatedGame.player1;
             updateUser(userToUpdate,{role : PLAYER_1});
-            io.to(userToUpdate).emit('roleUpdate',{userRole : getUser(userToUpdate).user.role});
+            io.to(userToUpdate).emit('roleUpdate',{userRole : getUser(userToUpdate).role});
         }
         // send game update to the room
         io.to(userRoom).emit('gameUpdate',{update: updatedGame});

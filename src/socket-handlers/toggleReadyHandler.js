@@ -4,7 +4,7 @@ const {getGame} = require('../games');
 const toggleReadyHandler = (io, client) => ({isReady}, callback) => {
     try {
         const userRoom = getUserRoom(client.id);
-        const currentGame = getGame(userRoom).game;
+        const currentGame = getGame(userRoom);
         
         const {player1, player2} = currentGame;
         if (client.id === player1) {
@@ -16,7 +16,7 @@ const toggleReadyHandler = (io, client) => ({isReady}, callback) => {
         }
         
         // Update the room that playerX is ready
-        io.to(userRoom).emit('gameUpdate',{update: getGame(userRoom).game})
+        io.to(userRoom).emit('gameUpdate',{update: getGame(userRoom)})
     
         // console.log(getAllGames());
         callback();

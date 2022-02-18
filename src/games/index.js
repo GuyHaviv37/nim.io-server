@@ -50,7 +50,7 @@ const joinGame = (roomId, player2)=>{
 
 const getGame = (roomId)=>{
     if(games.has(roomId)){
-        return {game : games.get(roomId)}
+        return games.get(roomId);
     } else {
         throw errors.RoomNotFoundError(roomId);
     }
@@ -107,7 +107,7 @@ const resetGame = (roomId) => {
     if(games.has(roomId)) {
         const game = games.get(roomId);
         const resettedGame = resetGameState(game);
-        return {updatedGame: resettedGame}
+        return resettedGame;
     } else {
         throw errors.RoomNotFoundError(roomId);
     }
