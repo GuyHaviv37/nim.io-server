@@ -1,6 +1,5 @@
 const {getUserRoom, removeUser, updateUser, getUser} = require('../users');
 const {removePlayerFromGame, removeGame} = require('../games');
-const errors = require('../errors');
 const {PLAYER_1} = require('../constants');
 
 const disconnectHandler = (io, client) => () => {
