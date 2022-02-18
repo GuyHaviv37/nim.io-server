@@ -1,10 +1,13 @@
 const {resetGame} = require('../games');
 
 const restartGameHandler = (io) => ({roomId}, callback) => {
-    const {updatedGame, error} = resetGame(roomId);
-    if (error) return callback(error);
-    
-    io.in(updatedGame.id).emit('gameUpdate',{update : updatedGame, isRestart: true});
+    try {
+        const {updatedGame} = resetGame(roomId);
+        
+        io.in(updatedGame.id).emit('gameUpdate',{update : updatedGame, isRestart: true});
+    } catch (error) {
+        callback(error);
+    }
 }
 
 module.exports = restartGameHandler;

@@ -6,7 +6,6 @@ const joinGameHandler = (io, client) => ({roomId},callback) => {
     try {
         const game = joinGame(roomId, client.id);
         const updatedUser = updateUser(client.id,{room: game.id, role : PLAYER_2});
-        if(updatedUser.error) return callback(updatedUser.error);
 
         client.join(game.id);
         // broadcast to all clients in the room that game is init'ed for display.

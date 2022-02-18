@@ -10,7 +10,6 @@ const checkGameOver = (heaps)=>{
 const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
     try {
         const userRoom = getUserRoom(client.id);
-        // handle error check if userRoom was not found !!
         const currentGame = getGame(userRoom).game;
     
         // Check both players are ready
@@ -42,7 +41,7 @@ const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
                 msg : `Cannot remove ${amount} of items from heap ${heapIndex}`
             })
         }
-        // Update legal game move
+        // Update legal game move - would be best to do it by copy and not by index I guess if we try to mock a db
         heaps[heapIndex] -= amount;
         currentGame.currentPlayerTurn = currentGame.currentPlayerTurn === player1 ? player2 : player1;
     

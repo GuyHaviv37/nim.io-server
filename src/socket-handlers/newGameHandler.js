@@ -6,7 +6,6 @@ const newGameHandler = (client) => ({roomId,heaps},callback) => {
     try {
         const game = createGame(roomId, heaps, client.id);
         const updatedUser = updateUser(client.id,{room: game.id, role: PLAYER_1})
-        if(updatedUser.error) return callback(updatedUser.error);
 
         client.join(game.id);
         client.emit('init',{newGame : game})

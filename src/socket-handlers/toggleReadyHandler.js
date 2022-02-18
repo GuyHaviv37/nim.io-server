@@ -4,7 +4,6 @@ const {getGame} = require('../games');
 const toggleReadyHandler = (io, client) => ({isReady}, callback) => {
     try {
         const userRoom = getUserRoom(client.id);
-        // Handle errors in getUserRoom
         const currentGame = getGame(userRoom).game;
         
         const {player1, player2} = currentGame;
