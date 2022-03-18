@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://clever-panini-c8e22f.netlify.app",
         methods: ["GET", "POST"],
         credentials: true
     }
