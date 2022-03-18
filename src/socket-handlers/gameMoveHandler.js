@@ -15,6 +15,7 @@ const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
         if (!isPlayersTurn(currentGame, client.id)) {
             console.log(`This is not ${client.id}'s turn`);
             return callback({
+                type: 'NOT_PLAYER_TURN',
                 msg: `This is not your turn`
             });
         }
@@ -23,11 +24,13 @@ const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
     
         if(!isHeapIndexValid(heapIndex)){
             return callback({
-                msg : `Error on heap index : ${heapIndex}`
+                type: 'INVALID_HEAP_INDEX',
+                msg : `No valid heap was selected`
             })
         }
         if(!isAmountToRemoveValid(heaps[heapIndex], amount)){
             return callback({
+                type: 'INVALID_AMOUNT_TO_REMOVE',
                 msg : `Cannot remove ${amount} of items from heap ${heapIndex}`
             })
         }

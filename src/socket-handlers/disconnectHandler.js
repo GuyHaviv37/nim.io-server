@@ -25,8 +25,6 @@ const disconnectHandler = (io, client) => () => {
             removeGame(updatedGame.id);
         }
     
-        // console.log(getAllGames());
-        // console.log(getAllUsers());
     } catch (error) {
         console.error(error);
         removeUser(client.id);
