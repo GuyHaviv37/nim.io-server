@@ -2,7 +2,7 @@ const validateInitialHeapSizes = (heaps) => heaps.every((heapSize) => heapSize <
 
 const resetGameState = (game) => {
     game.heaps = [...game.originalHeaps];
-    game.currentPlayerTurn = Math.random() > 0.5 ? player2 : game.player1;
+    game.currentPlayerTurn = Math.random() > 0.5 ? game.player2 : game.player1;
     game.isPlayer1Ready = false;
     game.isPlayer2Ready = false;
     return game;
