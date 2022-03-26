@@ -42,6 +42,7 @@ const joinGame = (roomId, player2)=>{
         };
         game.player2 = player2;
         game.playersConnected++;
+        game.currentPlayerTurn = Math.random() > 0.5 ? player2 : game.player1;
         return game;
     } else {
         throw errors.RoomNotFoundError(roomId);
