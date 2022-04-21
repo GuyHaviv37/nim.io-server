@@ -38,13 +38,16 @@ const gameMoveHandler = (io, client) => ({heapIndex,amount}, callback) => {
         heaps[heapIndex] -= amount;
         const currentPlayerTurn = currentGame.currentPlayerTurn === player1 ? player2 : player1;
         updateGame(userRoom, {heaps, currentPlayerTurn});
-    
+        
         if(isGameOver(heaps)){
             io.to(userRoom).emit('gameOver',{winner : client.id});
         } else {
-            io.to(userRoom).emit('gameUpdate',{update: getGame(userRoom)})
+            io.to(userRoom).emit('gameUpdate',{
+                update: getGame(userRoom),
+                gameLogEntry: {playerTurn: currentGame.currentPlayerTurn, heapIndex, amount}
+            })
         }
-    
+        
         callback();
     } catch (error) {
         callback(error);
